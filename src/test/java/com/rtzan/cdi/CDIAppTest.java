@@ -11,6 +11,7 @@ import javax.enterprise.inject.se.SeContainerInitializer;
  * Created by ${USERNAME} on 9/20/17.
  */
 public class CDIAppTest {
+
     private SeContainer container;
 
     @Before
