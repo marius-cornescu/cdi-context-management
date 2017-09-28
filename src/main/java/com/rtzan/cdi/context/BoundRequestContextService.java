@@ -15,9 +15,6 @@ public class BoundRequestContextService {
     @Inject
     private BoundRequestContext requestContext;
 
-
-
-
     /**
      * Start the request, providing a data store which will last the lifetime of the request
      */
@@ -28,24 +25,20 @@ public class BoundRequestContextService {
         requestContext.activate();
     }
 
-
     /**
      * End the request, providing the same data store as was used to start the request
      */
     public void endRequest(Map<String, Object> requestDataStore) {
         try {
-
             // Invalidate the request (all bean instances will be scheduled for destruction) */
             requestContext.invalidate();
 
             // Deactivate the request, causing all bean instances to be destroyed (as the context is invalid) */
             requestContext.deactivate();
-
         } finally {
             // Ensure that whatever happens we dissociate to prevent any memory leaks */
             requestContext.dissociate(requestDataStore);
         }
-
     }
 
 }

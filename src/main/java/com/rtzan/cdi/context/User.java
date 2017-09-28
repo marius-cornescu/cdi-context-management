@@ -9,7 +9,7 @@ import javax.enterprise.context.RequestScoped;
 @RequestScoped
 public class User {
 
-    private String name = "user_01";
+    private String name;
 
     @PostConstruct
     public void afterCreate() {
