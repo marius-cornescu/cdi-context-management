@@ -4,6 +4,8 @@ import com.rtzan.cdi.context.BoundRequestContextService;
 import com.rtzan.cdi.context.User;
 
 import javax.enterprise.inject.Instance;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.CDI;
 import javax.inject.Inject;
 
 /**
@@ -15,6 +17,7 @@ public class OtherService {
     private OtherService2 otherService;
 
     public void greet(Greeter greeter) {
+        BeanManager bm = CDI.current().getBeanManager();
         otherService.greet(greeter);
     }
 
