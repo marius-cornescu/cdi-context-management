@@ -10,16 +10,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.se.SeContainer;
-import javax.enterprise.inject.se.SeContainerInitializer;
 import javax.inject.Inject;
-import java.lang.reflect.ParameterizedType;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.function.Supplier;
 
 /**
  * Created by ${USERNAME} on 9/20/17.
@@ -30,14 +23,14 @@ public class CustomCDIContextTest {
     private ExecutorService executor;
 
     @Inject
-    private SimpleService simpleService;
+    private AppService appService;
 
     @Deployment
     public static JavaArchive deployment() {
         JavaArchive archive =
                 ShrinkWrap.create(JavaArchive.class)
                         // Test classes
-                        .addPackages(true, SimpleService.class.getPackage())
+                        .addPackages(true, AppService.class.getPackage())
                         // Bean archive deployment descriptor
                         .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
         ;
@@ -57,7 +50,7 @@ public class CustomCDIContextTest {
     @Test
     public void testOneCall() throws Exception {
         // Fire synchronous event that triggers the code in App class.
-        simpleService.greetMe("Marius");
+        appService.greetMe("Marius");
     }
 
     @Test
@@ -69,7 +62,7 @@ public class CustomCDIContextTest {
 
     public void triggerAsync(final String... payloads) throws InterruptedException {
         for (String payload : payloads) {
-            executor.submit(() -> simpleService.greetMe(payload));
+            executor.submit(() -> appService.greetMe(payload));
         }
     }
 

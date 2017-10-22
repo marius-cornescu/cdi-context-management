@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @ApplicationScoped
-public class SimpleService {
+public class AppService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -20,7 +20,7 @@ public class SimpleService {
     private Instance<User> userInstances;
 
     @Inject
-    private OtherService otherService;
+    private GreetThreadedService greetService;
 
     @Inject
     private BoundRequestContextService reqContextSvc;
@@ -39,7 +39,7 @@ public class SimpleService {
         User user = userInstances.get();
         user.setName(userName);
 
-        otherService.greet(greeter);
+        greetService.greet(greeter);
 
         reqContextSvc.endRequest(requestDataStore);
     }

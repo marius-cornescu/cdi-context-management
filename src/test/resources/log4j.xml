@@ -9,6 +9,10 @@
         </layout>
     </appender>
 
+    <category name="org.jboss.weld">
+        <priority value="INFO" />
+    </category>
+
     <category name="com.rtzan">
         <priority value="INFO" />
     </category>

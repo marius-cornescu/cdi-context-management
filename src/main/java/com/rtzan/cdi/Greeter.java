@@ -9,7 +9,7 @@ public class Greeter {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public void greet(User user) {
-        logger.info("Hello mister " + user.getName());
+        logger.info("Hello mister [{}].", user.getName());
     }
 
 }
