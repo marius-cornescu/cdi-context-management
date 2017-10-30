@@ -15,10 +15,9 @@ public class OtherService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Inject
-    private User user;
 
-    public void greet(Greeter greeter) {
+
+    public void greet(Greeter greeter, User user) {
         logger.debug("Will trigger greet on [{}] for [{}]", greeter, user);
 
         greeter.greet(user);

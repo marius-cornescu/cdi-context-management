@@ -4,7 +4,6 @@ import org.jboss.weld.context.bound.BoundRequestContext;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.util.Map;
 
 /**
  * Created by ${USERNAME} on 9/20/17.
@@ -18,17 +17,33 @@ public class BoundRequestContextService {
     /**
      * Start the request, providing a data store which will last the lifetime of the request
      */
-    public void startRequest(Map<String, Object> requestDataStore) {
+    public RequestStore startRequest(String key, Object value) {
+        RequestStore requestDataStore = new RequestStore();
+        requestDataStore.put(key, value);
         // Associate the store with the context and activate the context
         requestContext.associate(requestDataStore);
 
         requestContext.activate();
+
+        return requestDataStore;
+    }
+
+    /**
+     * Start the request, providing a data store which will last the lifetime of the request
+     */
+    public RequestStore resumeRequest(RequestStore requestDataStore) {
+        // Associate the store with the context and activate the context
+        requestContext.associate(requestDataStore);
+
+        requestContext.activate();
+
+        return requestDataStore;
     }
 
     /**
      * End the request, providing the same data store as was used to start the request
      */
-    public void endRequest(Map<String, Object> requestDataStore) {
+    public void endRequest(RequestStore requestDataStore) {
         try {
             // Invalidate the request (all bean instances will be scheduled for destruction) */
             requestContext.invalidate();
@@ -39,6 +54,10 @@ public class BoundRequestContextService {
             // Ensure that whatever happens we dissociate to prevent any memory leaks */
             requestContext.dissociate(requestDataStore);
         }
+    }
+
+    public BoundRequestContext getRequestContext() {
+        return requestContext;
     }
 
 }

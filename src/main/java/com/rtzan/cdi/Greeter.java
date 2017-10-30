@@ -12,4 +12,8 @@ public class Greeter {
         logger.info("Hello mister [{}].", user.getName());
     }
 
+    @Override
+    public String toString() {
+        return "Greeter{}";
+    }
 }

@@ -1,15 +1,16 @@
 package com.rtzan.cdi;
 
 import com.rtzan.cdi.context.BoundRequestContextService;
+import com.rtzan.cdi.context.RequestStore;
 import com.rtzan.cdi.context.User;
+import com.rtzan.cdi.context.UserRequestScope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.Map;
 
 @ApplicationScoped
 public class AppService {
@@ -25,23 +26,45 @@ public class AppService {
     @Inject
     private BoundRequestContextService reqContextSvc;
 
-    public void greetMe(String userName) {
-        logger.info("Servicing user [{}]", userName);
 
-        Map<String, Object> requestDataStore = new HashMap<>();
+    public void greetMe(String userName) {
+        logger.info("1. Servicing user [{}]", userName);
 
         Greeter greeter = new Greeter();
 
-        requestDataStore.put("greeter", greeter);
-
-        reqContextSvc.startRequest(requestDataStore);
+        RequestStore requestDataStore = reqContextSvc.startRequest("greeter", greeter);
 
         User user = userInstances.get();
         user.setName(userName);
 
-        greetService.greet(greeter);
+        greetService.greet(requestDataStore, greeter);
 
         reqContextSvc.endRequest(requestDataStore);
+    }
+
+    @RequestScoped
+    public void greet2(String userName) {
+        logger.info("2. Servicing user [{}]", userName);
+
+        Greeter greeter = new Greeter();
+
+        User user = userInstances.get();
+        user.setName(userName);
+
+        greetService.greet(null, greeter);
+
+    }
+
+    @UserRequestScope
+    public void greetUser(String userName) {
+        logger.info("3. Servicing user [{}]", userName);
+
+        Greeter greeter = new Greeter();
+
+        User user = userInstances.get();
+        user.setName(userName);
+
+        greetService.greet(null, greeter);
     }
 
 }

@@ -13,6 +13,8 @@ import org.junit.runner.RunWith;
 import javax.inject.Inject;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * Created by ${USERNAME} on 9/20/17.
@@ -55,14 +57,21 @@ public class CustomCDIContextTest {
 
     @Test
     public void testParallelCall() throws Exception {
-        triggerAsync("Marius", "Monica", "Test");
+        triggerAsync(s -> appService.greetMe(s), "Marius", "Monica", "Test");
 
         Thread.sleep(30*1000L);
     }
 
-    public void triggerAsync(final String... payloads) throws InterruptedException {
+    @Test
+    public void testParallelAnnotatedCall() throws Exception {
+        triggerAsync(s -> appService.greet2(s), "Marius", "Monica", "Test");
+
+        Thread.sleep(30*1000L);
+    }
+
+    public void triggerAsync(Consumer<String> function, final String... payloads) throws InterruptedException {
         for (String payload : payloads) {
-            executor.submit(() -> appService.greetMe(payload));
+            executor.submit(() -> function.accept(payload));
         }
     }
 

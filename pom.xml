@@ -35,6 +35,12 @@
             <version>${version.weld}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.jboss.weld</groupId>
+            <artifactId>weld-api</artifactId>
+            <version>3.0.Final</version>
+        </dependency>
+
         <!-- LOGGING -->
         <dependency>
             <groupId>org.slf4j</groupId>
