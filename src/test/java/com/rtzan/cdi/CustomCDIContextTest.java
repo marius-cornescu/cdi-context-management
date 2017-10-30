@@ -34,7 +34,7 @@ public class CustomCDIContextTest {
                         // Test classes
                         .addPackages(true, AppService.class.getPackage())
                         // Bean archive deployment descriptor
-                        .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                        .addAsManifestResource("META-INF/beans-test.xml", "beans.xml");
         ;
 
         return archive;
@@ -65,6 +65,13 @@ public class CustomCDIContextTest {
     @Test
     public void testParallelAnnotatedCall() throws Exception {
         triggerAsync(s -> appService.greet2(s), "Marius", "Monica", "Test");
+
+        Thread.sleep(30*1000L);
+    }
+
+    @Test
+    public void testParallelCustomAnnotatedCall() throws Exception {
+        triggerAsync(s -> appService.greetUser(s), "Marius", "Monica", "Test");
 
         Thread.sleep(30*1000L);
     }

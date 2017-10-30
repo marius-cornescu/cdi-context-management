@@ -28,7 +28,11 @@ public class UserRequestScopeInterceptor {
 
         Object returnValue = null;
 
+        RequestStore requestDataStore = reqContextSvc.startRequest();
+
         returnValue = ctx.proceed();
+
+        reqContextSvc.endRequest(requestDataStore);
 
         return returnValue;
     }

@@ -17,9 +17,8 @@ public class BoundRequestContextService {
     /**
      * Start the request, providing a data store which will last the lifetime of the request
      */
-    public RequestStore startRequest(String key, Object value) {
+    public RequestStore startRequest() {
         RequestStore requestDataStore = new RequestStore();
-        requestDataStore.put(key, value);
         // Associate the store with the context and activate the context
         requestContext.associate(requestDataStore);
 
@@ -31,13 +30,11 @@ public class BoundRequestContextService {
     /**
      * Start the request, providing a data store which will last the lifetime of the request
      */
-    public RequestStore resumeRequest(RequestStore requestDataStore) {
+    public void resumeRequest(RequestStore requestDataStore) {
         // Associate the store with the context and activate the context
         requestContext.associate(requestDataStore);
 
         requestContext.activate();
-
-        return requestDataStore;
     }
 
     /**

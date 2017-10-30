@@ -30,9 +30,9 @@ public class AppService {
     public void greetMe(String userName) {
         logger.info("1. Servicing user [{}]", userName);
 
-        Greeter greeter = new Greeter();
+        RequestStore requestDataStore = reqContextSvc.startRequest();
 
-        RequestStore requestDataStore = reqContextSvc.startRequest("greeter", greeter);
+        Greeter greeter = new Greeter();
 
         User user = userInstances.get();
         user.setName(userName);
