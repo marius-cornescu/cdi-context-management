@@ -28,7 +28,7 @@ public class BoundRequestContextService {
     }
 
     /**
-     * Start the request, providing a data store which will last the lifetime of the request
+     * Resume a request context based on the data store associated with the request
      */
     public void resumeRequest(RequestStore requestDataStore) {
         // Associate the store with the context and activate the context
