@@ -43,7 +43,7 @@ public class GreetThreadedService {
         logger.debug("Processing user [{}]", user);
 
         Future<?> future = executor.submit(() -> {
-            logger.debug("User: [{}]", user);
+            logger.debug(">>>> B. User: [{}]", user);
             otherService.greet(greeter, user);
         });
 
