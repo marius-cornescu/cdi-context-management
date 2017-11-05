@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -39,11 +38,33 @@ public class GreetThreadedService {
         executor = Executors.newCachedThreadPool();
     }
 
-    public void greet(RequestStore requestDataStore, Greeter greeter) {
-        logger.debug("Processing greeter [{}] and [{}]", greeter, user);
+    public void greet() {
+        final Greeter greeter = new Greeter();
+        logger.debug("Processing user [{}]", user);
 
         Future<?> future = executor.submit(() -> {
+            logger.debug("User: [{}]", user);
+            otherService.greet(greeter, user);
+        });
+
+        try {
+            future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            logger.warn("", e);
+        }
+    }
+
+    public void greet(RequestStore requestDataStore) {
+        final Greeter greeter = new Greeter();
+        logger.debug("Processing user [{}]", user);
+
+        Future<?> future = executor.submit(() -> {
+            logger.debug(">>>> A. RequestStore: [{}]", requestDataStore);
+            //logger.debug("    B. User: [{}]", user);
+
             reqContextSvc.resumeRequest(requestDataStore);
+
+            logger.debug(">>>> B. User: [{}]", user);
             otherService.greet(greeter, user);
         });
 

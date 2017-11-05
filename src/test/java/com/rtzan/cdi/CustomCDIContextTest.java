@@ -3,7 +3,6 @@ package com.rtzan.cdi;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.After;
 import org.junit.Before;
@@ -14,13 +13,14 @@ import javax.inject.Inject;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 /**
  * Created by ${USERNAME} on 9/20/17.
  */
 @RunWith(Arquillian.class)
 public class CustomCDIContextTest {
+
+    private long wait_seconds = 5;
 
     private ExecutorService executor;
 
@@ -49,31 +49,38 @@ public class CustomCDIContextTest {
     public void tearDown() throws Exception {
     }
 
+    /**
+     * Calling the service from within the same thread (MAIN thread),
+     * so the request storage was created for the RequestContext (in org.jboss.arquillian.container.weld.embedded.LifecycleHandler.createRequest())
+     * => while in the thread, we have context access, but as we move to another thread, we lose the context => NPE on the context created bean
+     */
     @Test
-    public void testOneCall() throws Exception {
-        // Fire synchronous event that triggers the code in App class.
-        appService.greetMe("Marius");
+    public void testOneCallWithRequestScope() throws Exception {
+        appService.greet2("Marius");
     }
 
+    /**
+     * Call from a thread, the method that creates its own ReqContext + storage, so we can still create & inject context bound beans
+     */
     @Test
     public void testParallelCall() throws Exception {
         triggerAsync(s -> appService.greetMe(s), "Marius", "Monica", "Test");
 
-        Thread.sleep(30*1000L);
+        Thread.sleep(wait_seconds * 1000L);
     }
 
     @Test
-    public void testParallelAnnotatedCall() throws Exception {
+    public void testParallelWithRequestScope() throws Exception {
         triggerAsync(s -> appService.greet2(s), "Marius", "Monica", "Test");
 
-        Thread.sleep(30*1000L);
+        Thread.sleep(wait_seconds * 1000L);
     }
 
     @Test
-    public void testParallelCustomAnnotatedCall() throws Exception {
+    public void testParallelCustomScope() throws Exception {
         triggerAsync(s -> appService.greetUser(s), "Marius", "Monica", "Test");
 
-        Thread.sleep(30*1000L);
+        Thread.sleep(wait_seconds * 1000L);
     }
 
     public void triggerAsync(Consumer<String> function, final String... payloads) throws InterruptedException {
