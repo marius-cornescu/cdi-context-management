@@ -5,9 +5,6 @@ import org.jboss.weld.context.bound.BoundRequestContext;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-/**
- * Created by ${USERNAME} on 9/20/17.
- */
 @ApplicationScoped
 public class BoundRequestContextService {
 

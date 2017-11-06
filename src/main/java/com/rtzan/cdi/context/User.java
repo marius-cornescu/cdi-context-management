@@ -3,9 +3,6 @@ package com.rtzan.cdi.context;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 
-/**
- * Created by ${USERNAME} on 9/20/17.
- */
 @RequestScoped
 public class User {
 
